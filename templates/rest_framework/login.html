@@ -1,0 +1,5 @@
+{% extends "rest_framework/login_base.html" %}
+{% load i18n %}
+{% block title %}{% if name %}{{ name }} – {% endif %}{% trans 'Ticket Queue API REST' %}{% endblock %}
+
+{% block branding %}<h3 style="margin: 0 0 20px;">{% trans 'Ticket Queue API REST' %}</h3>{% endblock %}

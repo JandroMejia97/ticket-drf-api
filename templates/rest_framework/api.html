@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load rest_framework %}
 
+{% block title %}{% if name %}{{ name }} – {% endif %}{% trans 'Ticket Queue API REST' %}{% endblock %}
+
 {% block branding %}
     <a class="navbar-brand" rel="nofollow" href="{% url 'ticket_api:api-root' %}">
         {% trans 'Ticket Queue API REST' %}
