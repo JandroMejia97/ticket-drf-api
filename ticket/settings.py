@@ -25,7 +25,9 @@ SECRET_KEY = 'g$#nh7_0idn@7$58q4*f-%b)u2uswudc$9hgll@3yn=%6crnp-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'https://ticket-queue-api.herokuapp.com/'
+]
 
 
 # Application definition
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -152,7 +155,7 @@ SESSION_COOKIE_NAME = 'ticketQueueSessionId'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 # Extra places for collectstatic to find static files.
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # The absolute path to the directory where will storage the media 
 # files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
