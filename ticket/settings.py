@@ -167,3 +167,7 @@ MEDIA_URL = '/media/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+import dj_database_url 
+prod_db  =  dj_database_url.config(conn_max_age=500, ssl_require=True)
+DATABASES['default'].update(prod_db)
