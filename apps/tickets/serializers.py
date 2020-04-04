@@ -77,6 +77,13 @@ class DepartamentoSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Departamento
         fields = ('__all__')
+    
+    def to_representation(self, instance):
+        response = super(DepartamentoSerializer, self).to_representation(instance)
+        response['municipios'] = MunicipioSerializer(
+            instance.municipio_set, many=True
+        ).data
+        return response
 
 
 class MunicipioSerializer(DynamicFieldsModelSerializer):
@@ -98,6 +105,14 @@ class EmpresaSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Empresa
         fields = ('__all__')
+    
+    def to_representation(self, instance):
+        response = super(EmpresaSerializer, self).to_representation(instance)
+        response['sucursales'] = SucursalSerializer(
+            instance.sucursal_set,
+            many=True
+        ).data
+        return response
 
 
 class TipoColaSerializer(DynamicFieldsModelSerializer):
@@ -112,6 +127,17 @@ class SucursalSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Sucursal
         fields = ('__all__')
+    
+    def to_respresentation(self, instance):
+        response = super(SucursalSerializer, self).to_representation(instance)
+        response['horarios'] = HorarioSerializer(
+            instance.horario_set,
+            many=True
+        ).data
+        response['municipio'] = MunicipioSerializer(
+            instance.municipio
+        ).data
+        return response
 
 
 class HorarioSerializer(DynamicFieldsModelSerializer):
@@ -119,6 +145,14 @@ class HorarioSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Horario
         fields = ('__all__')
+    
+    def to_respresentation(self, instance):
+        response = super(HorarioSerializer, self).to_representation(instance)
+        response['colas'] = ColaSerializer(
+            instance.cola_set,
+            many=True
+        ).data
+        return response
 
 
 class ColaSerializer(DynamicFieldsModelSerializer):
@@ -132,3 +166,10 @@ class TicketSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Ticket
         fields = ('__all__')
+    
+    def to_respresentation(self, instance):
+        response = super(TicketSerializer, self).to_representation(instance)
+        response['horarios'] = ColaSerializer(
+            instance.cola
+        ).data
+        return response
