@@ -12,6 +12,11 @@
 
 {% block userlinks %}
     <li>
+        <a href="{% url 'schema-redoc' %}">
+            {% trans 'Documentation' %}
+        </a>
+    </li>
+    <li>
         <a href="{% url 'admin:login' %}">
             {% trans 'Admin Site' %}
         </a>

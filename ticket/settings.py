@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_yasg',
     'django_filters',
     'phonenumber_field',
     'apps.tickets'
@@ -66,6 +67,15 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+        'djangorestframework_camel_case.parser.CamelCaseFormParser',
+        'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
+    ),
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
@@ -74,8 +84,45 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter'
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
+
+JSON_CAMEL_CASE = {
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Basic': {
+            'type': 'basic',
+            'description': 'Autenticación básica con usuario y contraseña'
+        },
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Autenticación por medio de un token de autenticación'\
+                ' enviado cómo parámetro en los HEADERS de la solicitud.',
+            'scopes': {
+                'read:colas': 'Leer colas',
+                'write:colas': 'Crear, modificar y borrar colas',
+            }
+        }
+    },
+    ' SECURITY_REQUIREMENTS': [
+        {'Basic': [
+            'write:colas',
+            'read:colas'
+        ]},
+        {'Bearer': []}
+    ],
+    'APIS_SORTER': 'alpha',
+    'DOC_EXPANSION': 'list'
+}
+
+#Login and logut URLs
+LOGIN_URL = 'rest_framework:login'
+LOGOUT_URL = 'rest_framework:logout'
 
 
 ROOT_URLCONF = 'ticket.urls'

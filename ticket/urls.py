@@ -17,18 +17,46 @@ from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import path, include
 
-from rest_framework import routers
+from rest_framework import routers, permissions, authentication
+
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 from apps.core.authentication import CustomAuthToken
 from apps.tickets.urls import router as ticket_router
 
+from apps.tickets import permissions as custom_permissions
+
 router = routers.DefaultRouter()
 router.registry.extend(ticket_router.registry)
+
+# schema_view = get_swagger_view(title='')
+schema_view = get_schema_view(
+   openapi.Info(
+      title='Ticket Queue API REST',
+      default_version='v1',
+      description='API REST creada para Ticket Queue App',
+      terms_of_service='https://www.google.com/policies/terms/',
+      contact=openapi.Contact(email='contact@ticket.com'),
+      license=openapi.License(name='BSD License'),
+   ),
+   public=False,
+   permission_classes=(
+        permissions.IsAuthenticated,
+    ),
+   authentication_classes=(
+        authentication.SessionAuthentication,
+        authentication.TokenAuthentication,
+   )
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(('rest_framework.urls', 'drf_site'), namespace='drf_site')),
     path('api/', include((router.urls, 'ticket_api'), namespace='ticket_api')),
     path('api/auth/token/', CustomAuthToken.as_view()),
-    path('', lambda request: redirect('api/', permanent=True))
+    path('', lambda request: redirect('api/', permanent=True)),
+    path(r'swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
