@@ -42,7 +42,7 @@ schema_view = get_schema_view(
    ),
    public=False,
    permission_classes=(
-        permissions.IsAuthenticated,
+        permissions.AllowAny,
     ),
    authentication_classes=(
         authentication.SessionAuthentication,
