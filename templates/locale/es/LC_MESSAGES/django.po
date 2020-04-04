@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-02 20:48-0600\n"
+"POT-Creation-Date: 2020-04-03 22:07-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: rest_framework/api.html:7
+#: rest_framework/api.html:5 rest_framework/api.html:9
+#: rest_framework/login.html:3 rest_framework/login.html:5
 msgid "Ticket Queue API REST"
 msgstr "Ticket Queue API REST"
 
-#: rest_framework/api.html:14
+#: rest_framework/api.html:16
+msgid "Documentation"
+msgstr "Documentación"
+
+#: rest_framework/api.html:21
 msgid "Admin Site"
 msgstr "Sitio Administrativo"
