@@ -12,7 +12,7 @@ class CustomAuthToken(ObtainAuthToken):
             }
         )
         serializer.is_valid(raise_exception=True)
-        user = serializer.valida_data['user']
+        user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
         return Response({
             'token': token.key,

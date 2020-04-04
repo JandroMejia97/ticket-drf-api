@@ -13,6 +13,7 @@ from .permissions import (
     IsUsuario,
     IsSuperUser,
     IsAdministrador,
+    is_authenticated
 )
 
 
@@ -58,7 +59,7 @@ class EmpresaViewSet(viewsets.ModelViewSet):
     filterset_fields = ('tipo',)
 
     def get_queryset(self):
-        if self.request.user.rol == Rol.ADMINISTRADOR:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.ADMINISTRADOR:
             return Empresa.objects.filter(administrador=self.request.user)
         return super().get_queryset()
 
@@ -70,7 +71,7 @@ class TipoColaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdministrador | IsSuperUser]
 
     def get_queryset(self):
-        if self.request.user.rol == Rol.ADMINISTRADOR:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.ADMINISTRADOR:
             return TipoCola.objects.filter(empresa__administrador=self.request.user)
         return super().get_queryset()
 
@@ -86,9 +87,9 @@ class SucursalViewSet(viewsets.ModelViewSet):
     ]
 
     def get_queryset(self):
-        if self.request.user.rol == Rol.ADMINISTRADOR:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.ADMINISTRADOR:
             return Sucursal.objects.filter(empresa__administrador=self.request.user)
-        if self.request.user.rol == Rol.CAJERO:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.CAJERO:
             return Sucursal.objects.filter(pk=self.request.user.sucursal.id)
         return super().get_queryset()
 
@@ -110,11 +111,11 @@ class HorarioViewSet(viewsets.ModelViewSet):
     )
 
     def get_queryset(self):
-        if self.request.user.rol == Rol.ADMINISTRADOR:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.ADMINISTRADOR:
             return Horario.objects.filter(
                 sucursal__empresa__administrador=self.request.user
             )
-        if self.request.user.rol == Rol.CAJERO:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.CAJERO:
             return Horario.objects.filter(sucursal=self.request.user.sucursal)
         return super().get_queryset()
 
@@ -137,9 +138,9 @@ class ColaViewSet(viewsets.ModelViewSet):
     )
 
     def get_queryset(self):
-        if self.request.user.rol == Rol.ADMINISTRADOR:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.ADMINISTRADOR:
             return Cola.objects.filter(sucursal__empresa__administrador=self.request.user)
-        if self.request.user.rol == Rol.CAJERO:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.CAJERO:
             return Cola.objects.filter(sucursal=self.request.user.sucursal)
         return super().get_queryset()
 
@@ -165,10 +166,10 @@ class TicketViewSet(viewsets.ModelViewSet):
     )
 
     def get_queryset(self):
-        if self.request.user.rol == Rol.ADMINISTRADOR:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.ADMINISTRADOR:
             return Ticket.objects.filter(
                 cola__sucursal__empresa__administrador=self.request.user
             )
-        if self.request.user.rol == Rol.CAJERO:
+        if is_authenticated(self.request) and self.request.user.rol == Rol.CAJERO:
             return Ticket.objects.filter(cola__sucursal=self.request.user.sucursal)
         return super().get_queryset()
