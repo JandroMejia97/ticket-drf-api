@@ -44,7 +44,7 @@ class Usuario(AbstractUser):
         blank=True,
         default=None,
         verbose_name='número de teléfono',
-        help_text='Ingrese su número de teléfono en el formato +41524204242'
+        help_text='Número de teléfono en el formato +50377234521'
     )
     rol = models.PositiveSmallIntegerField(
         choices=Rol.choices,
@@ -56,7 +56,7 @@ class Usuario(AbstractUser):
             validators.MaxValueValidator(3, 'La opción seleccionada es inválida'),
         ),
         verbose_name='rol',
-        help_text='Seleccione el ROL del usuario.'
+        help_text='ROL del usuario (CAJERO = 1), (USUARIO = 2), o (ADMINISTRADOR = 3)'
     )
     sucursal = models.ForeignKey(
         to='Sucursal',
@@ -65,7 +65,7 @@ class Usuario(AbstractUser):
         blank=True,
         default=None,
         verbose_name='sucursal',
-        help_text='Seleccione una sucursal si este usuario tiene el rol "CAJERO".'
+        help_text='Sucursal, en el caso que este usuario tenga el rol "CAJERO".'
     )
 
     def __str__(self):
@@ -83,7 +83,7 @@ class Departamento(models.Model):
         blank=False,
         null=False,
         verbose_name='nombre',
-        help_text='Ingrese el nombre de este departamento.'
+        help_text='Nombre de este departamento.'
     )
 
     def __str__(self):
@@ -101,13 +101,13 @@ class Municipio(models.Model):
         blank=False,
         null=False,
         verbose_name='nombre',
-        help_text='Ingrese el nombre de este municipio.'
+        help_text='Nombre de este municipio.'
     )
     departamento = models.ForeignKey(
         to=Departamento,
         on_delete=models.CASCADE,
         verbose_name='departamento',
-        help_text='Seleccione el departamento'
+        help_text='Departamento'
     )
 
     def __str__(self):
@@ -125,7 +125,7 @@ class TipoEmpresa(models.Model):
         blank=False,
         null=False,
         verbose_name='tipo',
-        help_text='Ingrese el tipo de empresa.'
+        help_text='Tipo de empresa.'
     )
 
     def __str__(self):
@@ -142,21 +142,29 @@ class Empresa(models.Model):
         blank=False,
         null=False,
         verbose_name='nombre',
-        help_text='Ingrese el nombre de la empresa.'
+        help_text='Nombre de la empresa.'
     )
     nombre_corto = models.CharField(
         max_length=50,
         blank=False,
         null=False,
         verbose_name='nombre corto',
-        help_text='Ingrese el nombre corto de la empresa.'
+        help_text='Nombre corto de la empresa.'
+    )
+    descripcion = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True,
+        default=None,
+        verbose_name='descripcion',
+        help_text='Descripción de la empresa.'
     )
     nit = models.CharField(
         max_length=17,
         blank=False,
         null=False,
         verbose_name='nit',
-        help_text='Ingrese el NIT de la empresa.'
+        help_text='NIT de la empresa.'
     )
     tipo = models.ForeignKey(
         to=TipoEmpresa,
@@ -165,7 +173,7 @@ class Empresa(models.Model):
         null=True,
         blank=False,
         verbose_name='tipo de empresa',
-        help_text='Seleccione el tipo de empresa.'
+        help_text='Tipo de empresa.'
     )
     administrador = models.ForeignKey(
         to=Usuario,
@@ -174,7 +182,7 @@ class Empresa(models.Model):
         blank=True,
         default=None,
         verbose_name='administrador',
-        help_text='Seleccione el administrador del sistema para esta empresa.'
+        help_text='Administrador del sistema para esta empresa.'
     )
 
     def __str__(self):
@@ -192,7 +200,7 @@ class TipoCola(models.Model):
         blank=False,
         null=False,
         verbose_name='tipo de cola',
-        help_text='Ingrese el nombre de este tipo de cola.'
+        help_text='Nombre de este tipo de cola.'
     )
     descripcion = models.CharField(
         max_length=150,
@@ -200,13 +208,13 @@ class TipoCola(models.Model):
         blank=True,
         default=None,
         verbose_name='descripcion',
-        help_text='Ingrese una descripción.'
+        help_text='Descripción de esta cola.'
     )
     capacidad = models.PositiveSmallIntegerField(
         blank=False,
         null=False,
         verbose_name='capacidad',
-        help_text='Ingrese la capacidad máxima de esta cola.'
+        help_text='Capacidad máxima de esta cola.'
     )
     empresa = models.ForeignKey(
         to=Empresa,
@@ -214,7 +222,7 @@ class TipoCola(models.Model):
         blank=False,
         null=False,
         verbose_name='empresa',
-        help_text='Selecccione la empresa a la que pertenece este tipo de cola.'
+        help_text='Empresa a la que pertenece este tipo de cola.'
     )
 
     def __str__(self):
@@ -232,7 +240,20 @@ class  Sucursal(models.Model):
         blank=False,
         null=False,
         verbose_name='nombre',
-        help_text='Ingrese el nombre de la empresa.'
+        help_text='Nombre de la sucursal.'
+    )
+    imagen = models.URLField(
+        null=True,
+        blank=True,
+        verbose_name='imagen',
+        help_text='URL donde se encuentra el logotipo de esta sucursal.'
+    )
+    telefono = PhoneNumberField(
+        null=True,
+        blank=True,
+        default=None,
+        verbose_name='número de teléfono',
+        help_text='Número de teléfono de la sucursal en el formato +50322155879'
     )
     latitud = models.DecimalField(
         blank=True,
@@ -269,7 +290,7 @@ class  Sucursal(models.Model):
         blank=True,
         null=True,
         verbose_name='dirección',
-        help_text='Ingrese la dirección.'
+        help_text='Dirección.'
     )
     empresa = models.ForeignKey(
         to=Empresa,
@@ -277,7 +298,7 @@ class  Sucursal(models.Model):
         blank=False,
         null=False,
         verbose_name='empresa',
-        help_text='Selecccione la empresa a la que pertenece esta sucursal.'
+        help_text='Empresa a la que pertenece esta sucursal.'
     )
     municipio = models.ForeignKey(
         to=Municipio,
@@ -285,7 +306,7 @@ class  Sucursal(models.Model):
         blank=False,
         null=False,
         verbose_name='municipio',
-        help_text='Seleccione el municipio en el que se encuentra esta sucursal.'
+        help_text='Municipio en el que se encuentra esta sucursal.'
     )
 
     def __str__(self):
@@ -310,7 +331,7 @@ class Horario(models.Model):
             validators.MaxValueValidator(7, 'La opción seleccionada es inválida'),
         ),
         verbose_name='rol',
-        help_text='Seleccione el día en que se tiene este horario.'
+        help_text='Día en que se tiene este horario.'
     )
     sucursal = models.ForeignKey(
         to=Sucursal,
@@ -318,7 +339,7 @@ class Horario(models.Model):
         null=False,
         blank=False,
         verbose_name='sucursal',
-        help_text='Seleccione una sucursal para este horario.'
+        help_text='Sucursal que atiende en este horario.'
     )
 
     def __str__(self):
@@ -347,7 +368,7 @@ class Cola(models.Model):
         null=True,
         blank=False,
         verbose_name='tipo de cola',
-        help_text='Seleccione el tipo de esta cola.'
+        help_text='Tipo de cola.'
     )
     sucursal = models.ForeignKey(
         to=Sucursal,
@@ -355,7 +376,7 @@ class Cola(models.Model):
         null=False,
         blank=False,
         verbose_name='sucursal',
-        help_text='Seleccione la sucursal para la que habilitará esta cola.'
+        help_text='Sucursal para la que se habilitará esta cola.'
     )
     horario = models.ForeignKey(
         to=Horario,
@@ -363,7 +384,7 @@ class Cola(models.Model):
         null=True,
         blank=False,
         verbose_name='horario',
-        help_text='Seleccione el horario en el cual esta cola estará habilitada'
+        help_text='Horario en el cual esta cola estará habilitada'
     )
 
     def __str__(self):
@@ -390,7 +411,7 @@ class Ticket(models.Model):
         blank=False,
         null=False,
         verbose_name='número',
-        help_text='Ingrese el número del ticket.'
+        help_text='Número del ticket.'
     )
     estado = models.PositiveSmallIntegerField(
         choices=Estado.choices,
@@ -402,7 +423,8 @@ class Ticket(models.Model):
             validators.MaxValueValidator(5, 'La opción seleccionada es inválida'),
         ),
         verbose_name='estado',
-        help_text='Seleccione el estado actual de este ticket.'
+        help_text='Estado actual de este (ticket ESPERA = 1), (ACTIVO = 2), '\
+            ' (PASO = 3), (VENCIDO = 4) ó (RETIRADO = 5).'
     )
     hora_generado = models.TimeField(
         auto_now_add=True,
@@ -420,7 +442,7 @@ class Ticket(models.Model):
             validators.MaxValueValidator(3, 'Solo se permiten 3 intentos.'),
         ),
         verbose_name='cantidad de intentos',
-        help_text='Ingrese la cantidad de intentos que se hizo para despachar este ticket.'
+        help_text='Cantidad de intentos que se hizo para despachar este ticket.'
     )
     cola = models.ForeignKey(
         to=Cola,
@@ -428,16 +450,16 @@ class Ticket(models.Model):
         blank=False,
         null=False,
         verbose_name='cola',
-        help_text='Seleccione la cola a la que asignará este ticket.'
+        help_text='Cola a la que se asigna este ticket.'
     )
     cliente = models.ForeignKey(
         to=Usuario,
         on_delete=models.DO_NOTHING,
-        blank=False,
+        blank=True,
         null=True,
         verbose_name='cliente',
         related_name='cliente',
-        help_text='Seleccione el usuario al que le asignará este ticket.'
+        help_text='Cliente que solicita este ticket.'
     )
     cajero = models.ForeignKey(
         to=Usuario,
@@ -446,7 +468,7 @@ class Ticket(models.Model):
         null=True,
         verbose_name='cajero',
         related_name='cajero',
-        help_text='Seleccione el cajero que despachó este ticket.'
+        help_text='Cajero que despachó este ticket.'
     )
 
     def __str__(self):
